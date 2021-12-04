@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/org/pantheon/desktop/gala/keybindings/" id="org.pantheon.desktop.gala.keybindings.monitor">
+      <key type="as" name="monitor">
+      <default><![CDATA[['<Super>m']]]></default>
+      <summary>The shortcut to enable monitor widget</summary>
+      <description>The shortcut to show monitor widget.</description>
+    </key>
+  </schema>
+</schemalist>
