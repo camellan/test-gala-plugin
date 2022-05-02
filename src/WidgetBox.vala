@@ -1,23 +1,33 @@
 using Clutter;
+using GLib;
 
 namespace Monitor
 {
 	public class WidgetBox : Actor
 	{
 		const int PADDING = 24;
-
+		Canvas canvas;
+		int number = 1;
+		// int fps = 1000 / 24; // 24 frames per second
+		int fps = 500;
 		public WidgetBox ()
 		{
 			width = 400;
 			height = 300;
-
-			var canvas = new Canvas ();
-			canvas.draw.connect (draw_background);
-			canvas.set_size ((int)width, (int)height);
+			load_canvas ();
+			Timeout.add (fps, update);
 			content = canvas;
 		}
 
-		bool draw_background (Cairo.Context cr)
+		bool load_canvas ()
+		{
+			canvas = new Canvas ();
+			canvas.draw.connect (draw_background);
+			canvas.set_size ((int)width, (int)height);
+			return true;
+		}
+
+		bool draw_background ( Cairo.Context cr )
 		{
 			cr.set_operator (Cairo.Operator.CLEAR);
 			cr.paint ();
@@ -40,7 +50,33 @@ namespace Monitor
 			cr.set_source_rgb (0.2, 0.2, 0.2);
 			cr.fill ();
 
-			return false;
+			// Text:
+			cr.set_source_rgb (0.1, 0.1, 0.1);
+			cr.select_font_face ("Ubuntu", Cairo.FontSlant.NORMAL, Cairo.FontWeight.BOLD);
+			cr.set_font_size (20);
+			cr.move_to (100, 60);
+			cr.show_text ("Test Monitor Plugin");
+
+			cr.select_font_face ("Ubuntu Mono", Cairo.FontSlant.NORMAL, Cairo.FontWeight.NORMAL);
+			cr.set_source_rgb (0.9, 0.1, 0.1);
+			cr.set_font_size (100);
+			cr.move_to (140, 200);
+
+			if(number > 100)
+			{
+				number = 1;
+			}
+			number++;
+
+			cr.show_text (number.to_string());
+
+			return true;
+		}
+
+		bool update ()
+		{
+			canvas.invalidate();
+			return true;
 		}
 	}
 }
